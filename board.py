@@ -1,12 +1,14 @@
-import pygame
 from field import Field
+from piece import Piece
 
 
 class Board:
     def __init__(self, screen):
         self.fields = []
+        self.pieces = []
         self.screen = screen
         self.init_fields()
+        self.init_pieces()
 
     def init_fields(self):
         for i in range(8):
@@ -23,21 +25,33 @@ class Board:
 
         self.print_param()
 
-    def draw_board(self):
-        pygame.font.init()
-        myfont = pygame.font.SysFont('Comic Sans MS', 10)
-
-        for field in self.fields:
-
-            if field.color == "light":
-                pygame.draw.rect(self.screen, (255, 255, 102), (field.x*field.sq_len, field.y*field.sq_len,
-                                                                field.sq_len, field.sq_len))
+    def init_pieces(self):
+        for i in range(3):
+            if i == 1:
+                for j in range(0, 7, 2):
+                    piece = Piece(i, j, radius=20, color="black", sq_len=50)
+                    self.pieces.append(piece)
             else:
-                pygame.draw.rect(self.screen, (102, 51, 0), (field.x * field.sq_len, field.y * field.sq_len,
-                                                                field.sq_len, field.sq_len))
+                for j in range(1, 8, 2):
+                    piece = Piece(i, j, radius=20, color="black", sq_len=50)
+                    self.pieces.append(piece)
 
-            textsurface = myfont.render(f"{field.x} {field.y}", False, (0, 0, 0))
-            self.screen.blit(textsurface, (field.x * field.sq_len, field.y * field.sq_len))
+        for i in range(5, 8):
+            if i == 6:
+                for j in range(1, 8, 2):
+                    piece = Piece(i, j, radius=20, color="white", sq_len=50)
+                    self.pieces.append(piece)
+            else:
+                for j in range(0, 7, 2):
+                    piece = Piece(i, j, radius=20, color="white", sq_len=50)
+                    self.pieces.append(piece)
+
+    def draw_board(self):
+        for field in self.fields:
+            field.draw(self.screen)
+
+        for piece in self.pieces:
+            piece.draw(self.screen)
 
     def print_param(self):
         for field in self.fields:
