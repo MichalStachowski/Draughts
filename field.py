@@ -7,6 +7,7 @@ class Field:
         self.y = y
         self.sq_len = sq_len
         self.color = color
+        self.is_blank = True  # false if piece on field, otherwise true
 
     def draw(self, screen):
         pygame.font.init()

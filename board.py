@@ -7,8 +7,11 @@ class Board:
         self.fields = []
         self.pieces = []
         self.screen = screen
+
         self.init_fields()
         self.init_pieces()
+        self.update_fields()
+        self.print_param()
 
     def init_fields(self):
         for i in range(8):
@@ -22,8 +25,6 @@ class Board:
 
                 self.fields.append(light_field)
                 self.fields.append(dark_field)
-
-        self.print_param()
 
     def init_pieces(self):
         for i in range(3):
@@ -46,6 +47,17 @@ class Board:
                     piece = Piece(i, j, radius=20, color="white", sq_len=50)
                     self.pieces.append(piece)
 
+    def update_fields(self):
+        """
+        Set is_blank = False in specified fields (where pieces are).
+        """
+        # list of [x, y] of each field. Used to find idx where is_blank parameter should be changed
+        fields_xy = [[field.x, field.y] for field in self.fields]
+        for piece in self.pieces:
+            idx = fields_xy.index([piece.x, piece.y])
+            self.fields[idx].is_blank = False
+        pass
+
     def draw_board(self):
         for field in self.fields:
             field.draw(self.screen)
@@ -55,4 +67,4 @@ class Board:
 
     def print_param(self):
         for field in self.fields:
-            print(field.x, field.y, field.color, field.sq_len)
+            print(field.x, field.y, field.color, field.sq_len, field.is_blank)
