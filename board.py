@@ -1,5 +1,7 @@
 from field import Field
 from piece import Piece
+import pygame
+from math import hypot
 
 
 class Board:
@@ -65,6 +67,23 @@ class Board:
         for piece in self.pieces:
             piece.draw(self.screen)
 
+        # for loop is duplicated because first it should be draw all pieces and then possible moves. If everything
+        # were in one for loop, then possibble moves for black pieces will be covered by another black pieces
+        for piece in self.pieces:
+            if piece.to_draw_possible_moves:
+                piece.draw_possible_moves(self.fields, self.screen)
+
     def print_param(self):
         for field in self.fields:
             print(field.x, field.y, field.color, field.sq_len, field.is_blank)
+
+    def event_handler(self, e):
+        if e.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = pygame.mouse.get_pos()
+            for piece in self.pieces:
+                piece.to_draw_possible_moves = False
+                piece_center_pos_pix = (piece.y * piece.sq_len + (piece.sq_len//2),
+                                        piece.x * piece.sq_len + (piece.sq_len//2))
+                distance = hypot(mouse_pos[0] - piece_center_pos_pix[0], mouse_pos[1] - piece_center_pos_pix[1])
+                if distance < piece.radius:
+                    piece.to_draw_possible_moves = True

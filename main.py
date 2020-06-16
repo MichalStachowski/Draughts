@@ -12,6 +12,6 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-
+        b.event_handler(event)
     b.draw_board()
     pygame.display.update()

@@ -8,6 +8,7 @@ class Piece:
         self.radius = radius
         self.color = color
         self.sq_len = sq_len
+        self.to_draw_possible_moves = False
 
     def draw(self, screen):
         if self.color == "black":
@@ -72,5 +73,3 @@ class Piece:
         """
         pygame.draw.circle(screen, color, (field.y * field.sq_len + (field.sq_len // 2),
                                                  field.x * field.sq_len + (field.sq_len // 2)), self.radius // 3)
-
-
