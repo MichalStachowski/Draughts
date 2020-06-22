@@ -9,6 +9,7 @@ class Board:
         self.fields = []
         self.pieces = []
         self.screen = screen
+        self.is_next_click_move = False  # set True when clicked on Piece. Purpose: make move by active Piece
 
         self.init_fields()
         self.init_pieces()
@@ -80,10 +81,37 @@ class Board:
     def event_handler(self, e):
         if e.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            for piece in self.pieces:
-                piece.to_draw_possible_moves = False
-                piece_center_pos_pix = (piece.y * piece.sq_len + (piece.sq_len//2),
-                                        piece.x * piece.sq_len + (piece.sq_len//2))
-                distance = hypot(mouse_pos[0] - piece_center_pos_pix[0], mouse_pos[1] - piece_center_pos_pix[1])
-                if distance < piece.radius:
-                    piece.to_draw_possible_moves = True
+            if not self.is_next_click_move:  # there is no active Piece
+                # TODO: method to get active Piece
+                for piece in self.pieces:
+                    piece.to_draw_possible_moves = False
+                    piece.is_active = False
+                    piece_center_pos_pix = (piece.y * piece.sq_len + (piece.sq_len//2),
+                                            piece.x * piece.sq_len + (piece.sq_len//2))
+                    distance = hypot(mouse_pos[0] - piece_center_pos_pix[0], mouse_pos[1] - piece_center_pos_pix[1])
+                    if distance < piece.radius:
+                        piece.to_draw_possible_moves = True
+                        piece.is_active = True
+                        self.is_next_click_move = True
+            else:  # there is active Piece
+                self.is_next_click_move = False
+                clicked_x = mouse_pos[1] // self.fields[0].sq_len
+                clicked_y = mouse_pos[0] // self.fields[0].sq_len
+                print(clicked_x, clicked_y)
+                for piece in self.pieces:  # TODO: change "for p in arr" to result of "get_active_piece" function
+                    if piece.is_active:  # make a move
+
+                        for field in self.fields:  # change is_blank property (to update possible moves for pieces)
+                            if piece.x == field.x and piece.y == field.y:
+                                field.is_blank = True
+                            if clicked_x == field.x and clicked_y == field.y:
+                                field.is_blank = False
+
+                        # Update piece position
+                        piece.x = clicked_x
+                        piece.y = clicked_y
+
+                        # TODO: check if next move is possible. If not, the set is_possible_move to false
+                        piece.is_active = False
+                        piece.to_draw_possible_moves = False
+                        break

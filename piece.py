@@ -9,6 +9,8 @@ class Piece:
         self.color = color
         self.sq_len = sq_len
         self.to_draw_possible_moves = False
+        self.is_active = False
+        # self.left_possible, self.right_possible = None, None
 
     def draw(self, screen):
         if self.color == "black":
